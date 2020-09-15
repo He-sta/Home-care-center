@@ -1,0 +1,70 @@
+<template>
+  <div class="main">
+    <div class="box">
+      <el-container>
+        <el-main v-bind:class="{ 'el-lomainl': true }"></el-main>
+        <el-main v-bind:class="{ 'el-lomainr': true }">
+          <div style="margin-top:20%;font-size:40px">
+            东软颐养中心
+          </div>
+          <div style="font-size:30px">
+            sign in
+          </div>
+          <div style="margin-top:5%">
+            <el-form
+              :model="ruleForm"
+              :rules="rules"
+              ref="ruleForm"
+              label-width="100px"
+              class="demo-ruleForm"
+            >
+              <el-form-item label="用户名">
+                <el-input v-model="form.inputa" placeholder="请输入用户名"></el-input>
+              </el-form-item>
+              <el-form-item label="密码">
+                <el-input v-model="form.inputb" placeholder="请输入密码"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click.native="login">登录</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-main>
+      </el-container>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      form: {
+        inputa: "",
+        inputb: ""
+      }
+    };
+  },
+  methods: {
+    login: function() {
+      alert(this.form.inputa);
+    }
+  }
+};
+</script>
+<style>
+.el-lomainl {
+  background-color: #000000;
+  color: #333;
+  text-align: center;
+  width: 60%;
+}
+.el-lomainr {
+  background-color: #ffffff;
+  color: #000000;
+  text-align: center;
+  width: 40%;
+}
+.el-container {
+  height: 600px;
+}
+</style>
