@@ -13,6 +13,10 @@ import docsetcase from "../views/case/docsetcase.vue";
 import docsearchcase from "../views/case/docsearchcase.vue";
 import login from "../views/login/login.vue";
 import docdeletecase from "../views/case/docdeletecase.vue";
+import dishadd from "../views/case/dishadd.vue";
+import dishesset from "../views/case/dishesset.vue";
+import dishessetforold from "../views/case/dishessetforold.vue";
+import dishescalenshow from "../views/case/dishescalenshow.vue";
 
 
 import Calendar from "../views/calendar/calendar.vue";
@@ -68,7 +72,7 @@ const routes =  [
       },
   
       {
-        path: "/login/login.vue",
+        path: "/login/login",
         component: Login,
       },
       {
@@ -91,7 +95,22 @@ const routes =  [
         path: "/doctor/docdeletecase",
         component: docdeletecase,
       },
-     
+      {
+        path: "/doctor/dishadd",
+        component: dishadd,
+      },
+      {
+        path: "/doctor/dishesset",
+        component: dishesset,
+      },
+      {
+        path: "/doctor/dishessetforold",
+        component: dishessetforold,
+      },
+      {
+        path: "/doctor/dishescalenshow",
+        component: dishescalenshow,
+      },
       {
           path: '/register/add',
           component:Add

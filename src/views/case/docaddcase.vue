@@ -36,7 +36,7 @@
                 <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click.native="onsubmit">添加</el-button>
+                <el-button type="primary" @click.native="setcookie">添加</el-button>
               </el-form-item>
             </el-form>
           </el-main>
@@ -51,7 +51,6 @@ export default {
       form: {
         inputa: "",
         inputb: "",
-
         inputc: "",
         inputd: "",
         date: new Date()
@@ -59,11 +58,9 @@ export default {
     };
   },
   methods: {
-    search: function() {
-      alert(this.input);
-    },
-    deletea: function() {
-      alert(this.input);
+    setcookie: function() {
+      var d = this.form.inputa;
+      document.cookie = d;
     }
   }
 };
