@@ -4,7 +4,7 @@
     <div class="main">
       <div class="box">
         <el-container>
-          <el-main v-bind:class="{ 'el-mainl': true }">
+          <el-main v-bind:class="{ 'el-mainll': true }">
             <el-breadcrumb separator="/">
               <el-breadcrumb-item :to="{path:'/doctor/docsearchcase' }">查找病例</el-breadcrumb-item>
               <el-breadcrumb-item :to="{path:'/doctor/docaddcase'}">增加病例</el-breadcrumb-item>
@@ -13,7 +13,7 @@
               <el-breadcrumb-item></el-breadcrumb-item>
             </el-breadcrumb>
           </el-main>
-          <el-main v-bind:class="{ 'el-mainr': true }">
+          <el-main v-bind:class="{ 'el-mainrr': true }">
             <el-form
               :model="ruleForm"
               :rules="rules"
@@ -50,9 +50,18 @@
               <el-table-column prop="clientId" label="客户id" width="180"></el-table-column>
               <el-table-column prop="date" label="日期" width="180"></el-table-column>
               <el-table-column prop="disease" label="病名"></el-table-column>
-              <el-table-column prop="doctorId" label="医生id"></el-table-column>
               <el-table-column prop="prescription" label="处方"></el-table-column>
               <el-table-column prop="remark" label="评论"></el-table-column>
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <el-button size="mini" @click="handlechange(scope.row.id)">编辑</el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(scope.row.id)"
+                  >删除</el-button>
+                </template>
+              </el-table-column>
             </el-table>
           </el-main>
         </el-container>
@@ -77,24 +86,32 @@ export default {
   },
   methods: {
     search: function() {
-      this.tableData = [{ clientId: "ddddd" }];
+      this.tableData = [{ clientId: "ddddd", id: "213123" }];
       alert(this.form.startDate);
+    },
+    handleDelete: function(id) {
+      alert(id);
+    },
+    handlechange: function(id) {
+      document.cookie = id;
+      alert(id);
+      this.$router.push({ path: "/doctor/docmanagecase" });
     }
   }
 };
 </script>
 <style>
-.el-mainl {
+.el-mainll {
   background-color: #ffffff;
   color: #333;
   text-align: center;
-  width: 30%;
+  width: 20%;
 }
-.el-mainr {
+.el-mainrr {
   background-color: #bdbdbd;
   color: #333;
   text-align: center;
-  width: 70%;
+  width: 80%;
 }
 .block {
   width: 50%;

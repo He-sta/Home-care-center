@@ -2,7 +2,7 @@
   <div class="main">
     <div class="box">
         <el-container>
-          <el-main v-bind:class="{ 'el-mainl': true }">
+          <el-main v-bind:class="{ 'el-mainll': true }">
             <el-breadcrumb separator="/">
               <el-breadcrumb-item :to="{path:'/doctor/docsearchcase' }">查找病例</el-breadcrumb-item>
               <el-breadcrumb-item :to="{path:'/doctor/docaddcase'}">增加病例</el-breadcrumb-item>
@@ -11,7 +11,7 @@
               <el-breadcrumb-item></el-breadcrumb-item>
             </el-breadcrumb>
           </el-main>
-          <el-main v-bind:class="{ 'el-mainr': true }">
+          <el-main v-bind:class="{ 'el-mainrr': true }">
             <el-form
               :model="ruleForm"
               :rules="rules"
@@ -20,23 +20,23 @@
               class="demo-ruleForm"
             >
               <el-form-item label="病人id">
-                <el-input v-model="form.inputa" placeholder="请输入病人id"></el-input>
+                <el-input v-model="form.clientId" placeholder="请输入病人id"></el-input>
               </el-form-item>
               <el-form-item label="病例">
-                <el-input v-model="form.inputb" placeholder="请输入病例"></el-input>
+                <el-input v-model="form.disease" placeholder="请输入病例"></el-input>
               </el-form-item>
-              <el-form-item label="病例描述">
-                <el-input v-model="form.inputc" placeholder="请输入病例描述"></el-input>
+              <el-form-item label="处方">
+                <el-input v-model="form.prescription" placeholder="请输入处方"></el-input>
               </el-form-item>
               <el-form-item label="备注">
-                <el-input v-model="form.inputd" placeholder="备注"></el-input>
+                <el-input v-model="form.remark" placeholder="备注"></el-input>
               </el-form-item>
               <el-form-item label="选择日期">
                 <span class="demonstration"></span>
                 <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click.native="setcookie">添加</el-button>
+                <el-button type="primary" @click.native="onsubmit">添加</el-button>
               </el-form-item>
             </el-form>
           </el-main>
@@ -49,34 +49,34 @@ export default {
   data() {
     return {
       form: {
-        inputa: "",
-        inputb: "",
-        inputc: "",
-        inputd: "",
+        clientId: "",
+        disease: "",
+        prescription: "",
+        remark: "",
         date: new Date()
       }
     };
   },
   methods: {
-    setcookie: function() {
-      var d = this.form.inputa;
-      document.cookie = d;
+    onsubmit: function() {
+      document.cookie=this.form.clientId;
+      alert("success");
     }
   }
 };
 </script>
 <style>
-.el-mainl {
+.el-mainll {
   background-color: #ffffff;
   color: #333;
   text-align: center;
-  width: 30%;
+  width: 20%;
 }
-.el-mainr {
+.el-mainrr {
   background-color: #bdbdbd;
   color: #333;
   text-align: center;
-  width: 70%;
+  width: 80%;
 }
 .el-container
 {

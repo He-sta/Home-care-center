@@ -46,7 +46,15 @@ export default {
   },
   methods: {
     login: function() {
-      alert(this.form.inputa);
+      if(this.form.inputa==="")
+      {
+        alert("用户名不能为空");
+      }
+      else
+      {
+        alert("success");
+         this.$router.push({ path: "/doctor/docaddcase" });
+      }
     }
   }
 };

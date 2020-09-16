@@ -2,8 +2,8 @@
   <div class="main">
     <div class="box">
       <el-container>
-        <el-main v-bind:class="{ 'el-mainl': true }"></el-main>
-        <el-main v-bind:class="{ 'el-mainr': true }">
+        <el-main v-bind:class="{ 'el-mainll': true }"></el-main>
+        <el-main v-bind:class="{ 'el-mainrr': true }">
           <el-form
             :model="ruleForm"
             :rules="rules"
@@ -48,23 +48,23 @@ export default {
   },
   methods: {
     onsubmit: function() {
-      alert("success");
+      alert(this.form.level);
     }
   }
 };
 </script>
 <style>
-.el-mainl {
+.el-mainll {
   background-color: #ffffff;
   color: #333;
   text-align: center;
-  width: 30%;
+  width: 20%;
 }
-.el-mainr {
+.el-mainrr {
   background-color: #bdbdbd;
   color: #333;
   text-align: center;
-  width: 70%;
+  width: 80%;
 }
 .el-container {
   height: 600px;

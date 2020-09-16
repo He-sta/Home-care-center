@@ -2,7 +2,7 @@
   <div class="main">
     <div class="box">
       <el-container>
-        <el-main v-bind:class="{ 'el-mainl': true }">
+        <el-main v-bind:class="{ 'el-mainll': true }">
           <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{path:'/doctor/dishadd' }">添加菜品</el-breadcrumb-item>
             <el-breadcrumb-item :to="{path:'/doctor/dishesset'}">设置套餐</el-breadcrumb-item>
@@ -11,7 +11,7 @@
             <el-breadcrumb-item></el-breadcrumb-item>
           </el-breadcrumb>
         </el-main>
-        <el-main v-bind:class="{ 'el-mainr': true }">
+        <el-main v-bind:class="{ 'el-mainrr': true }">
           <el-form
             :model="ruleForm"
             :rules="rules"
@@ -56,17 +56,17 @@ export default {
 };
 </script>
 <style>
-.el-mainl {
+.el-mainll {
   background-color: #ffffff;
   color: #333;
   text-align: center;
-  width: 30%;
+  width: 20%;
 }
-.el-mainr {
+.el-mainrr {
   background-color: #bdbdbd;
   color: #333;
   text-align: center;
-  width: 70%;
+  width: 80%;
 }
 .el-container {
   height: 600px;
