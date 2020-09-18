@@ -4,15 +4,6 @@
     <div class="main">
       <div class="box">
         <el-container>
-          <el-main v-bind:class="{ 'el-mainll': true }">
-            <el-breadcrumb separator="/">
-              <el-breadcrumb-item :to="{path:'/doctor/docsearchcase' }">查找病例</el-breadcrumb-item>
-              <el-breadcrumb-item :to="{path:'/doctor/docaddcase'}">增加病例</el-breadcrumb-item>
-              <el-breadcrumb-item :to="{path:'/doctor/docmanagecase'}">修改病例</el-breadcrumb-item>
-              <el-breadcrumb-item :to="{path:'/doctor/docdeletecase'}">删除病例</el-breadcrumb-item>
-              <el-breadcrumb-item></el-breadcrumb-item>
-            </el-breadcrumb>
-          </el-main>
           <el-main v-bind:class="{ 'el-mainrr': true }">
             <el-form
               :model="form"
@@ -21,26 +12,21 @@
               label-width="100px"
               class="demo-ruleForm"
             >
-              <div>请选择病人</div>
-              <el-select v-model="form.clientId" placeholder="请选择">
-                <el-option
-                  v-for="item in clientdata"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
               <el-form-item>
-                <div class="block">
-                  <div>选择起始日期</div>
-                  <span class="demonstration"></span>
-                  <el-date-picker v-model="form.startDate" type="date" placeholder="选择起始日期"></el-date-picker>
-                </div>
-                <div class="block">
-                  <div>选择终止日期</div>
-                  <span class="demonstration"></span>
-                  <el-date-picker v-model="form.endDate" type="date" placeholder="选择截止日期"></el-date-picker>
-                </div>
+                <el-select v-model="form.clientId" placeholder="请选择病人">
+                  <el-option
+                    v-for="item in clientdata"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+                <div>选择起始日期</div>
+                <span class="demonstration"></span>
+                <el-date-picker v-model="form.startDate" type="date" placeholder="选择起始日期"></el-date-picker>
+                <div>选择终止日期</div>
+                <span class="demonstration"></span>
+                <el-date-picker v-model="form.endDate" type="date" placeholder="选择截止日期"></el-date-picker>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click.native="search">查找</el-button>
@@ -70,6 +56,30 @@
 </template>
 <script>
 import axios from "axios";
+Date.prototype.Format = function(fmt) {
+  //author: meizz
+  var o = {
+    "M+": this.getMonth() + 1, //月份
+    "d+": this.getDate(), //日
+    "h+": this.getHours(), //小时
+    "m+": this.getMinutes(), //分
+    "s+": this.getSeconds(), //秒
+    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+    S: this.getMilliseconds() //毫秒
+  };
+  if (/(y+)/.test(fmt))
+    fmt = fmt.replace(
+      RegExp.$1,
+      (this.getFullYear() + "").substr(4 - RegExp.$1.length)
+    );
+  for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt))
+      fmt = fmt.replace(
+        RegExp.$1,
+        RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length)
+      );
+  return fmt;
+};
 export default {
   data() {
     return {
@@ -86,17 +96,34 @@ export default {
   created() {
     this.ini();
   },
+
   methods: {
+    getCookie: function(name) {
+      var arr,
+        reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+      if ((arr = document.cookie.match(reg))) return arr[2];
+      else return null;
+    },
     search: function() {
       let url = `http://47.107.189.55:8081/HomeCareCenter/medicalRecord/search`;
-      alert(this.form.endDate);
-      axios.get(url, { params: { clientId: this.form.clientId } }).then(res => {
-        if (res.data.code == 0) {
-          this.tableData = res.data.data;
-        } else {
-          alert(res.data.code);
-        }
-      });
+      var time1 = this.form.startDate.Format("yyyy/MM/dd hh:mm:ss");
+      var time2 = this.form.endDate.Format("yyyy/MM/dd") + " 23:59:59";
+      alert(time2);
+      axios
+        .get(url, {
+          params: {
+            clientId: this.form.clientId,
+            endDate: time2,
+            startDate: time1
+          }
+        })
+        .then(res => {
+          if (res.data.code == 0) {
+            this.tableData = res.data.data;
+          } else {
+            alert(res.data.code);
+          }
+        });
     },
     handleDelete: function(caseid) {
       let url = `http://47.107.189.55:8081/HomeCareCenter/medicalRecord/delete`;
@@ -121,9 +148,17 @@ export default {
       });
     },
     ini: function() {
+      var temp = document.cookie.split(";")[0].split("=")[1];
+      alert(temp);
       let url = `http://47.107.189.55:8081/HomeCareCenter/client/search`;
-      axios.get(url).then(res => {
+      axios({
+        method: "get",
+        url: `http://47.107.189.55:8081/HomeCareCenter/client/search`,
+        params:{},
+        headers: { Authorization: temp }
+      }).then(res => {
         if (res.data.code == 0) {
+          alert("success");
           this.clientdata = res.data.data;
         } else {
           alert(res.data.code);

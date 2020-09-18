@@ -53,10 +53,12 @@ export default {
               message: "操作成功",
               type: "success"
             });
+            document.cookie="expires="+res.data.data.ttl;
+            alert(document.cookie);
           }
           else
           {
-            alert("3434");
+            alert("失败");
           }
         });
 

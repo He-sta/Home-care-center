@@ -73,15 +73,32 @@
           <router-link to="/">医生功能</router-link>
         </template>
         <el-menu-item index="7-1">
-          <router-link to="/doctor/docsetcase">护理定义</router-link>
+          <router-link to="/doctor/docaddcase">病例增添</router-link>
         </el-menu-item>
         <el-menu-item index="7-2">
-          <router-link to="/doctor/docsearchcase">增删改查</router-link>
+          <router-link to="/doctor/docsearchcase">病例查找</router-link>
         </el-menu-item>
       </el-submenu>
-      <el-menu-item index="8">
-        <router-link to="/doctor/dishadd">膳食日历</router-link>
-      </el-menu-item>
+      <el-submenu index="8">
+        <template slot="title">
+          <router-link to="/">膳食日历</router-link>
+        </template>
+        <el-menu-item index="8-1">
+          <router-link to="/doctor/dishadd">添加菜品</router-link>
+        </el-menu-item>
+        <el-menu-item index="8-2">
+          <router-link to="/doctor/dishesset">设置套餐</router-link>
+        </el-menu-item>
+        <el-menu-item index="8-3">
+          <router-link to="/doctor/dishessetforold">为老人设定套餐</router-link>
+        </el-menu-item>
+        <el-menu-item index="8-4">
+          <router-link to="/doctor/dishescalenshow">为老人套餐展示</router-link>
+        </el-menu-item>
+        <el-menu-item index="8-5">
+          <router-link to="/doctor/dishescalenmanage">更改套餐</router-link>
+        </el-menu-item>
+      </el-submenu>
     </el-menu>
   </div>
 </template>
