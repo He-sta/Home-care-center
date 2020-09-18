@@ -13,7 +13,7 @@
         </el-main>
         <el-main v-bind:class="{ 'el-mainrr': true }">
           <el-form
-            :model="ruleForm"
+            :model="form"
             :rules="rules"
             ref="ruleForm"
             label-width="100px"

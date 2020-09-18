@@ -4,12 +4,8 @@
       <el-container>
         <el-main v-bind:class="{ 'el-lomainl': true }"></el-main>
         <el-main v-bind:class="{ 'el-lomainr': true }">
-          <div style="margin-top:20%;font-size:40px">
-            东软颐养中心
-          </div>
-          <div style="font-size:30px">
-            sign in
-          </div>
+          <div style="margin-top:20%;font-size:40px">东软颐养中心</div>
+          <div style="font-size:30px">sign in</div>
           <div style="margin-top:5%">
             <el-form
               :model="ruleForm"
@@ -19,10 +15,10 @@
               class="demo-ruleForm"
             >
               <el-form-item label="用户名">
-                <el-input v-model="form.inputa" placeholder="请输入用户名"></el-input>
+                <el-input v-model="form.idCardNo" placeholder="请输入用户名"></el-input>
               </el-form-item>
               <el-form-item label="密码">
-                <el-input v-model="form.inputb" placeholder="请输入密码"></el-input>
+                <el-input v-model="form.password" placeholder="请输入密码"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click.native="login">登录</el-button>
@@ -35,25 +31,35 @@
   </div>
 </template>
 <script>
+import axios from "axios"
 export default {
   data() {
     return {
       form: {
-        inputa: "",
-        inputb: ""
+        idCardNo: "",
+        password: ""
       }
     };
   },
   methods: {
     login: function() {
-      if(this.form.inputa==="")
-      {
+      if (this.form.idCardNo === "") {
         alert("用户名不能为空");
-      }
-      else
-      {
-        alert("success");
-         this.$router.push({ path: "/doctor/docaddcase" });
+      } else {
+        let url = `http://47.107.189.55:8081/HomeCareCenter/worker/login`;
+        axios.post(url, this.form).then(res => {
+          if (res.data.code === 0) {
+            this.$message({
+              message: "操作成功",
+              type: "success"
+            });
+          }
+          else
+          {
+            alert("3434");
+          }
+        });
+
       }
     }
   }

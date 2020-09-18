@@ -13,18 +13,12 @@
         </el-main>
         <el-main v-bind:class="{ 'el-mainrr': true }">
           <el-form
-            :model="ruleForm"
+            :model="form"
             :rules="rules"
             ref="ruleForm"
             label-width="100px"
             class="demo-ruleForm"
           >
-            <el-form-item label="病例id">
-              <el-input v-model="form.id" placeholder="请输入病例id"></el-input>
-            </el-form-item>
-            <el-form-item label="病人id">
-              <el-input v-model="form.clientId" placeholder="请输入病人id"></el-input>
-            </el-form-item>
             <el-form-item label="病例">
               <el-input v-model="form.disease" placeholder="请输入病例"></el-input>
             </el-form-item>
@@ -48,23 +42,32 @@
   </div>
 </template>
 <script>
+import axios from "axios"
 export default {
   data() {
     return {
       form: {
-        id:document.cookie,
-        clientId: "",
-        disease: "",
-        prescription: "",
-        remark: "",
+        id:this.$route.params.id,
+        disease: this.$route.params.disease,
+        prescription: this.$route.params.prescription,
+        remark: this.$route.params.remark,
         date: new Date()
       }
     };
   },
   methods: {
     change: function() {
-      var a = document.cookie;
-      alert(document.cookie);
+      let url = `http://47.107.189.55:8081/HomeCareCenter/medicalRecord/update`;
+      alert(this.form.endDate);
+        axios.post(url,this.form).then(res => {
+          if (res.data.code == 0) {
+            alert("success");
+          }
+          else
+          {
+            alert(res.data.code );
+          }
+        });
     }
   }
 };

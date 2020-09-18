@@ -20,15 +20,6 @@
             label-width="100px"
             class="demo-ruleForm"
           >
-            <div>请选择病人</div>
-            <el-select v-model="form.clientId" placeholder="请选择">
-              <el-option
-                v-for="item in clientdata"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
             <div>请选择套餐</div>
             <el-select v-model="form.dishSetId" placeholder="请选择">
               <el-option
@@ -67,7 +58,8 @@ export default {
       clientdata: [],
       dishesdata: [],
       form: {
-        clientId: "",
+        id: this.$route.params.calenid,
+        clientId: this.$route.params.clientid,
         dishSetId: "",
         startDate: new Date(),
         endDate: new Date()
@@ -79,7 +71,7 @@ export default {
   },
   methods: {
     onsubmit: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/dishSetCalendar/add`;
+      let url = `http://47.107.189.55:8081/HomeCareCenter/dishSetCalendar/update`;
       axios.post(url, this.form).then(res => {
         if (res.data.code == 0) {
           this.$message({
@@ -113,19 +105,3 @@ export default {
 };
 </script>
 <style>
-.el-mainll {
-  background-color: #ffffff;
-  color: #333;
-  text-align: center;
-  width: 20%;
-}
-.el-mainrr {
-  background-color: #bdbdbd;
-  color: #333;
-  text-align: center;
-  width: 80%;
-}
-.el-container {
-  height: 600px;
-}
-</style>

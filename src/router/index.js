@@ -17,6 +17,7 @@ import dishadd from "../views/case/dishadd.vue";
 import dishesset from "../views/case/dishesset.vue";
 import dishessetforold from "../views/case/dishessetforold.vue";
 import dishescalenshow from "../views/case/dishescalenshow.vue";
+import dishescalenmanage from "../views/case/dishescalenmanage.vue";
 
 
 import Calendar from "../views/calendar/calendar.vue";
@@ -85,6 +86,7 @@ const routes =  [
       },
       {
         path: "/doctor/docmanagecase",
+        name: "manage",
         component: docmanagecase,
       },
       {
@@ -110,6 +112,11 @@ const routes =  [
       {
         path: "/doctor/dishescalenshow",
         component: dishescalenshow,
+      },
+      {
+        path: "/doctor/dishescalenmanage",
+        name: "calenmanage",
+        component: dishescalenmanage,
       },
       {
           path: '/register/add',

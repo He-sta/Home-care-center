@@ -5,7 +5,7 @@
         <el-main v-bind:class="{ 'el-mainll': true }"></el-main>
         <el-main v-bind:class="{ 'el-mainrr': true }">
           <el-form
-            :model="ruleForm"
+            :model="form"
             :rules="rules"
             ref="ruleForm"
             label-width="100px"
@@ -48,7 +48,9 @@ export default {
   },
   methods: {
     onsubmit: function() {
-      alert(this.form.level);
+      document.cookie="id=1111111";
+      var x = document.cookie;
+      alert(x);
     }
   }
 };

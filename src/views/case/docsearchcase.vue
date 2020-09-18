@@ -15,21 +15,21 @@
           </el-main>
           <el-main v-bind:class="{ 'el-mainrr': true }">
             <el-form
-              :model="ruleForm"
+              :model="form"
               :rules="rules"
               ref="ruleForm"
               label-width="100px"
               class="demo-ruleForm"
             >
-              <el-form-item label="病人id">
-                <el-input v-model="form.clientId" placeholder="请输入病人id"></el-input>
-              </el-form-item>
-              <el-form-item label="医生id">
-                <el-input v-model="form.doctorId" placeholder="请输入医生id"></el-input>
-              </el-form-item>
-              <el-form-item label="病例id">
-                <el-input v-model="form.id" placeholder="请输入病例id"></el-input>
-              </el-form-item>
+              <div>请选择病人</div>
+              <el-select v-model="form.clientId" placeholder="请选择">
+                <el-option
+                  v-for="item in clientdata"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
               <el-form-item>
                 <div class="block">
                   <div>选择起始日期</div>
@@ -47,19 +47,18 @@
               </el-form-item>
             </el-form>
             <el-table :data="tableData" style="width: 100%">
-              <el-table-column prop="clientId" label="客户id" width="180"></el-table-column>
-              <el-table-column prop="date" label="日期" width="180"></el-table-column>
+              <el-table-column type="index" width="50"></el-table-column>
+              <el-table-column prop="date" label="日期"></el-table-column>
               <el-table-column prop="disease" label="病名"></el-table-column>
               <el-table-column prop="prescription" label="处方"></el-table-column>
               <el-table-column prop="remark" label="评论"></el-table-column>
               <el-table-column label="操作">
                 <template slot-scope="scope">
-                  <el-button size="mini" @click="handlechange(scope.row.id)">编辑</el-button>
                   <el-button
                     size="mini"
-                    type="danger"
-                    @click="handleDelete(scope.row.id)"
-                  >删除</el-button>
+                    @click="handlechange(scope.row.id,scope.row.disease,scope.row.prescription,scope.row.remark)"
+                  >编辑</el-button>
+                  <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -70,13 +69,13 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
+      clientdata: [],
       form: {
         clientId: "",
-        doctorId: "",
-        id: "",
         startDate: new Date(),
         endDate: new Date()
       },
@@ -84,18 +83,52 @@ export default {
       tableData: []
     };
   },
+  created() {
+    this.ini();
+  },
   methods: {
     search: function() {
-      this.tableData = [{ clientId: "ddddd", id: "213123" }];
-      alert(this.form.startDate);
+      let url = `http://47.107.189.55:8081/HomeCareCenter/medicalRecord/search`;
+      alert(this.form.endDate);
+      axios.get(url, { params: { clientId: this.form.clientId } }).then(res => {
+        if (res.data.code == 0) {
+          this.tableData = res.data.data;
+        } else {
+          alert(res.data.code);
+        }
+      });
     },
-    handleDelete: function(id) {
-      alert(id);
+    handleDelete: function(caseid) {
+      let url = `http://47.107.189.55:8081/HomeCareCenter/medicalRecord/delete`;
+      alert(caseid);
+      axios.get(url, { params: { id: caseid } }).then(res => {
+        if (res.data.code == 0) {
+          this.tableData = res.data.data;
+        } else {
+          alert("失败");
+        }
+      });
     },
-    handlechange: function(id) {
-      document.cookie = id;
-      alert(id);
-      this.$router.push({ path: "/doctor/docmanagecase" });
+    handlechange: function(caseid, casedisease, caseprescription, caseremark) {
+      this.$router.push({
+        name: "manage",
+        params: {
+          id: caseid,
+          disease: casedisease,
+          prescription: caseprescription,
+          remark: caseremark
+        }
+      });
+    },
+    ini: function() {
+      let url = `http://47.107.189.55:8081/HomeCareCenter/client/search`;
+      axios.get(url).then(res => {
+        if (res.data.code == 0) {
+          this.clientdata = res.data.data;
+        } else {
+          alert(res.data.code);
+        }
+      });
     }
   }
 };
