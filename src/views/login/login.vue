@@ -53,8 +53,9 @@ export default {
               message: "操作成功",
               type: "success"
             });
-            document.cookie="expires="+res.data.data.ttl;
-            alert(document.cookie);
+            document.cookie="jwt="+res.data.data.jwt+";"+"id="+res.data.data.worker.id+";"+"expires="+res.data.data.ttl;
+            var x=document.cookie
+            alert(x);
           }
           else
           {

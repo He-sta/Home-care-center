@@ -148,7 +148,7 @@ export default {
       });
     },
     ini: function() {
-      var temp = document.cookie.split(";")[0].split("=")[1];
+      var temp = this.getCookie("jwt");
       alert(temp);
       let url = `http://47.107.189.55:8081/HomeCareCenter/client/search`;
       axios({

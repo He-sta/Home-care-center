@@ -54,7 +54,7 @@ export default {
       else return null;
     },
     onsubmit: function() {
-      var x = this.getCookie("jwt");
+      var x = this.getCookie("id");
       alert(x);
     }
   }
