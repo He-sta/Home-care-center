@@ -56,8 +56,11 @@ export default {
             document.cookie="jwt="+res.data.data.jwt+";"+"id="+res.data.data.worker.id+";"+"expires="+res.data.data.ttl;
             var x=document.cookie
             alert(x);
+<<<<<<< HEAD
             console.log(res.data.data.worker.id)
             sessionStorage.setItem("id", res.data.data.worker.id);this.$router.push('/main')
+=======
+>>>>>>> e9c3897163c75d09f2d542e751be695e87490bca
           }
           else
           {
