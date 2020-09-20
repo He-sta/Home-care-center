@@ -2,15 +2,6 @@
   <div class="main">
     <div class="box">
       <el-container>
-        <el-main v-bind:class="{ 'el-mainll': true }">
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{path:'/doctor/docsearchcase' }">查找病例</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{path:'/doctor/docaddcase'}">增加病例</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{path:'/doctor/docmanagecase'}">修改病例</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{path:'/doctor/docdeletecase'}">删除病例</el-breadcrumb-item>
-            <el-breadcrumb-item></el-breadcrumb-item>
-          </el-breadcrumb>
-        </el-main>
         <el-main v-bind:class="{ 'el-mainrr': true }">
           <el-form
             :model="form"

@@ -8,9 +8,9 @@
           <div style="font-size:30px">sign in</div>
           <div style="margin-top:5%">
             <el-form
-              :model="ruleForm"
+              :model="form"
               :rules="rules"
-              ref="ruleForm"
+              ref="form"
               label-width="100px"
               class="demo-ruleForm"
             >
@@ -46,17 +46,22 @@ export default {
       if (this.form.idCardNo === "") {
         alert("用户名不能为空");
       } else {
-        let url = `http://47.107.189.55:8081/HomeCareCenter/worker/login`;
+        let url = `http://47.107.189.55:8082/HomeCareCenter/worker/login`;
         axios.post(url, this.form).then(res => {
           if (res.data.code === 0) {
             this.$message({
               message: "操作成功",
               type: "success"
             });
+            document.cookie="jwt="+res.data.data.jwt+";"+"id="+res.data.data.worker.id+";"+"expires="+res.data.data.ttl;
+            var x=document.cookie
+            alert(x);
+            console.log(res.data.data.worker.id)
+            sessionStorage.setItem("id", res.data.data.worker.id);this.$router.push('/main')
           }
           else
           {
-            alert("3434");
+            alert("失败");
           }
         });
 

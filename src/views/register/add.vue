@@ -2,8 +2,21 @@
   <div class="main">
       <div class="box">
       <div class="picture">
-          <div class="block"><el-avatar :size="120" :src="circleUrl"></el-avatar></div>
-           <el-button>添加照片</el-button>
+       <div class="block"><el-avatar :size="120" :src="form.headImg"></el-avatar></div>
+           <!-- -->
+            <el-upload
+                class="avatar-uploader"
+                 ref="image"
+                name="image"
+                :action="`http://47.107.189.55:8080/HomeCareCenter/image/upload`"
+                :data="uploadData"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload">
+                <el-button>添加照片</el-button>
+            <!--    <img v-if="imgUrl" :src="`${imgUrl}`" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+            </el-upload>
       </div>
       <div class="info1">
           <el-form ref="form" :model="form" label-width="80px">
@@ -11,25 +24,35 @@
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item label="性别">
-                <el-radio-group v-model="form.sex">
-                <el-radio label="男"></el-radio>
-                <el-radio label="女"></el-radio>
+                <el-radio-group v-model="form.gender">
+                <el-radio label="0">男</el-radio>
+                <el-radio label="1">女</el-radio>
                 </el-radio-group>
             </el-form-item>
              <el-form-item label="身份证号">
-                <el-input v-model="form.id"></el-input>
+                <el-input v-model="form.idCardNo"></el-input>
             </el-form-item>
-             <el-form-item label="生日">
-                <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-            </el-form-item>
+          <el-form-item label="入住日期">
+                <el-date-picker type="date" placeholder="选择日期" v-model="form.inDate" style="width: 100%;"></el-date-picker>
+            </el-form-item> 
             <el-form-item label="手机号">
-                <el-input v-model="form.mobile"></el-input>
+                <el-input v-model="form.phoneNo"></el-input>
             </el-form-item>
-            <el-form-item label="床位">
-                <el-input v-model="form.bed"></el-input>
+             <el-form-item label="床位号" prop="bedId">
+                <el-select v-model="form.bedId" placeholder="请选择床位号">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.id"
+                            :label="item.id"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+                </el-form-item>
+                <el-form-item label="护理级别">
+                <el-input v-model="form.levelOfCare"></el-input>
             </el-form-item>
             <el-form-item label="食物要求">
-                <el-input type="textarea" v-model="form.food"></el-input>
+                <el-input type="textarea" v-model="form.foodReq"></el-input>
             </el-form-item>
            
         </el-form>
@@ -37,15 +60,15 @@
       <div class="info2">
           <el-form ref="form" :model="form" label-width="80px">
             <el-form-item label="famaily">
-                <el-input v-model="form.name"></el-input>
+                <el-input v-model="form.relativeName"></el-input>
             </el-form-item>
             <el-form-item label="联系方式">
-                <el-input v-model="form.famailyMobile"></el-input>
+                <el-input v-model="form.relativePhone"></el-input>
             </el-form-item>
             <el-form-item label="配偶">
-                <el-radio-group v-model="form.mate">
-                <el-radio label="是"></el-radio>
-                <el-radio label="否"></el-radio>
+                <el-radio-group v-model="form.marriage">
+                <el-radio label="0">未婚</el-radio>
+                <el-radio label="1">已婚</el-radio>
                 </el-radio-group>
             </el-form-item>
             
@@ -54,7 +77,7 @@
             </el-form-item>
             
             <el-form-item label="体重">
-                <el-input v-model="form.width"></el-input>
+                <el-input v-model="form.weight"></el-input>
             </el-form-item>
             <el-form-item label="备注">
                 <el-input type="textarea" v-model="form.remark"></el-input>
@@ -69,29 +92,129 @@
   </div>
 </template>
 <script>
-    //import Nav from '@/components/nav.vue'
+    import axios from 'axios'
+    import Qs from 'qs'
+    import {HOST} from "../../common/js/config";
     export default {
-        
-         data() {
-      return {
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+        data() {
+        return {
+            imgUrl:'',
+            form: {
+            name: '',
+            gender:'',
+            bedId:'',
+            phoneNo:'',
+            foodReq:'',
+            relativeName:'',
+            relativePhone:'',
+            marriage:'',
+            height:'',
+            weight:'',
+            remark:'',
+            idCardNo:'',
+            inDate:'',
+            headImg:''
+        },
+        uploadData: {
+            userId:'1234',
+        },
+        options:[],
+        param:"",
+        rules: {
+          name: [
+            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          ],
+          region: [
+            { required: true, message: '请选择活动区域', trigger: 'change' }
+          ],
+          inDate: [
+            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          ],
+          date2: [
+            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+          ],
+          type: [
+            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+          ],
+          gender: [
+            { required: true, message: '请选择性别', trigger: 'change' }
+          ],
+          desc: [
+            { required: true, message: '请填写活动形式', trigger: 'blur' }
+          ]
         }
       }
     },
+    created(){
+            this.host = HOST
+            this.getBed()
+           
+        },
     methods: {
-      onSubmit() {
-        console.log('submit!');
-      }
+        //查询所有空余的床位
+            getBed(){
+                let url = `${HOST}/bed/searchEmpty`
+                axios.get(url, {params: {bedId:this.form.bedId}}).then(res=>{
+                    this.options = res.data.data
+                })
+            },
+            onSubmit(form) {
+        // var formData = JSON.stringify(this.form); // 这里才是你的表单数据
+                this.$refs.form.validate((valid) => {
+                    if (valid) {//验证成功
+                        //提交数据到服务器
+                       
+                        let url = `${HOST}/client/add`
+                        //let dt = Qs.stringify(this.form);
+                        axios.post(url,this.form).then(res=>{
+                           // this.form = res ?res :{}
+                            alert(res.data.code)
+                            if (res.data.code == 0){
+                                this.$message({
+                                    message: '新增成功',
+                                    type: 'success'
+                                });
+                                alert('添加成功')
+                                console.log("success");  
+                            }
+                        }).catch(function(){
+                            console.log("服务器异常！");
+                            
+                         });
+                    }
+                })
+    
+      },
+            handleAvatarSuccess(res,file) {
+              
+                this.imgUrl = URL.createObjectURL(file.raw);
+                this.form.headImg=this.imgUrl
+                 console.log(this.form.headImg)
+                
+               
+
+                },
+           
+            //上传成功前的回调函数
+            beforeAvatarUpload(file) {
+                this.image=file;
+               // console.log(this.image)
+                //console.log(file);
+                 //console.log(this.form)
+                //this.image=JSON.stringify(file);
+                const isJPG = file.type === 'image/jpeg'||'image/png';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG或者PNG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
+            }
     }
-  
     }
 </script>
 <style scoped>

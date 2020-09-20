@@ -2,16 +2,6 @@
   <div class="main">
     <div class="box">
       <el-container>
-        <el-main v-bind:class="{ 'el-mainll': true }">
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{path:'/doctor/dishadd' }">添加菜品</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{path:'/doctor/dishesset'}">设置套餐</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{path:'/doctor/dishessetforold'}">为老人设定套餐</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{path:'/doctor/dishescalenshow'}">老人的套餐展示</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{path:'/doctor/dishescalenmanage'}">老人的套餐设定</el-breadcrumb-item>
-            <el-breadcrumb-item></el-breadcrumb-item>
-          </el-breadcrumb>
-        </el-main>
         <el-main v-bind:class="{ 'el-mainrr': true }">
           <el-form
             :model="form"
@@ -20,7 +10,7 @@
             label-width="100px"
             class="demo-ruleForm"
           >
-            <div>请选择病人</div>
+            <div style="margin-top:2%; margin-bottom: 1%;">请选择病人</div>
             <el-select v-model="form.clientId" placeholder="请选择">
               <el-option
                 v-for="item in clientdata"
@@ -29,7 +19,7 @@
                 :value="item.id"
               ></el-option>
             </el-select>
-            <div>请选择套餐</div>
+            <div style="margin-top:2%; margin-bottom: 1%;">请选择套餐</div>
             <el-select v-model="form.dishSetId" placeholder="请选择">
               <el-option
                 v-for="item in dishesdata"
@@ -38,21 +28,17 @@
                 :value="item.id"
               ></el-option>
             </el-select>
-            <el-form-item>
-              <div class="block">
-                <div>选择起始日期</div>
-                <span class="demonstration"></span>
-                <el-date-picker v-model="form.startDate" type="date" placeholder="选择起始日期"></el-date-picker>
-              </div>
-              <div class="block">
-                <div>选择终止日期</div>
-                <span class="demonstration"></span>
-                <el-date-picker v-model="form.endDate" type="date" placeholder="选择截止日期"></el-date-picker>
-              </div>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click.native="onsubmit">设定</el-button>
-            </el-form-item>
+            <div style="margin-top:2%; margin-bottom: 1%;">选择起始日期</div>
+            <span class="demonstration"></span>
+            <el-date-picker v-model="form.startDate" type="date" placeholder="选择起始日期"></el-date-picker>
+            <div style="margin-top:2%; margin-bottom: 1%;">选择终止日期</div>
+            <span class="demonstration"></span>
+            <el-date-picker v-model="form.endDate" type="date" placeholder="选择截止日期"></el-date-picker>
+            <div style="margin-top: 5%;width: 20px;margin-left: 38%;">
+              <el-form-item>
+                <el-button type="primary" @click.native="onsubmit">设定</el-button>
+              </el-form-item>
+            </div>
           </el-form>
         </el-main>
       </el-container>

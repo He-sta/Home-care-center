@@ -47,9 +47,14 @@ export default {
     };
   },
   methods: {
+    getCookie: function(name) {
+      var arr,
+        reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+      if ((arr = document.cookie.match(reg))) return arr[2];
+      else return null;
+    },
     onsubmit: function() {
-      document.cookie="id=1111111";
-      var x = document.cookie;
+      var x = this.getCookie("id");
       alert(x);
     }
   }
