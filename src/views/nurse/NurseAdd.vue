@@ -1,19 +1,31 @@
 <template>
   <div class="main">
     <div class="box">
+     <div class="picture">
+     <div class="block"><el-avatar :size="120" :src="ruleForm.headImg"></el-avatar></div>
+     <el-upload
+                class="avatar-uploader"
+                 ref="image"
+                name="image"
+                :action="`http://47.107.189.55:8080/HomeCareCenter/image/upload`"
+                :data="uploadData"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload">
+                <el-button style="margin-top:30px">添加照片</el-button>
+            </el-upload>
+    </div>
+    <div class="info1">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" >
     <el-form-item label="姓名" prop="name">
         <el-input v-model="ruleForm.name"></el-input>
     </el-form-item>
 
-    <el-form-item label="编号" prop="id">
-        <el-input v-model="ruleForm.id"></el-input>
-    </el-form-item>
 
     <el-form-item label="类型" prop="type">
-    <el-select v-model="ruleForm.type" placeholder="职业类型">
+    <el-select v-model="ruleForm.type" placeholder="职业类型" style="width:100%">
        <el-option
-      v-for="item in options"
+      v-for="item in option"
       :key="item.value"
       :label="item.label"
       :value="item.value"
@@ -22,48 +34,60 @@
     </el-select>
     </el-form-item>
 
-    <el-form-item label="性别" prop="gender">
-    <el-radio-group v-model="ruleForm.gneder">
-      <el-radio label="男"></el-radio>
-      <el-radio label="女"></el-radio>
-    </el-radio-group>
-    </el-form-item>
+     <el-form-item label="性别">
+    <el-select v-model="ruleForm.gender" placeholder="请选择性别" style="width:100%">
+      <el-option label="男" value="0"></el-option>
+      <el-option label="女" value="1"></el-option>
+    </el-select>
+  </el-form-item>
 
-    <el-form-item label="电话" prop="phone_no">
-        <el-input v-model.number="ruleForm.phone_no"></el-input>
+    <el-form-item label="电话" prop="phoneNo">
+        <el-input v-model.number="ruleForm.phoneNo"></el-input>
     </el-form-item>
- 
-    <el-form-item label="身份证号" prop="id_card">
-        <el-input v-model="ruleForm.id_card" placeholder="请填写证件号码"></el-input>
+    
+    <el-form-item label="身份证号" prop="idCardNo">
+        <el-input v-model="ruleForm.idCardNo" placeholder="请填写证件号码"></el-input>
     </el-form-item>   
-
+    </el-form>
+    
+    </div>
+    <div class="info2">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" >
     <el-form-item label="入职时间" required>
-        <el-col :span="11">
-         <el-form-item prop="date1">
-          <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+        <el-col :span="21">
+         <el-form-item prop="registerDate">
+          <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.registerDate" ></el-date-picker>
          </el-form-item>
         </el-col> 
+    </el-form-item>
 
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="11">
-        <el-form-item prop="date2">
-        <el-time-picker placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
+       <el-form-item label="生日" required>
+        <el-col :span="21">
+         <el-form-item prop="birthday">
+          <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.birthday" ></el-date-picker>
          </el-form-item>
-       </el-col>
+        </el-col> 
     </el-form-item>
    
-    <el-form-item label="管理病区" prop="areaId">
-        <el-input v-model="ruleForm.areaId"></el-input>
-    </el-form-item>   
+   <el-form-item label="管理病区" prop="areaId">
+                <el-select v-model="ruleForm.areaId" placeholder="请选择病区号" style="width:100%">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.id"
+                            :label="item.id"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+                </el-form-item>
 
     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="密码" prop="pass">
-        <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+        <el-form-item label="密码" prop="password">
+        <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
     </el-form-item>
     </el-form>
 
-    <el-form-item label="确认密码" prop="checkPass">
-        <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+    <el-form-item label="确认密码" prop="checkPassword">
+        <el-input type="password" v-model="ruleForm.checkPassword" autocomplete="off"></el-input>
     </el-form-item>
     
     <el-form-item>
@@ -71,19 +95,21 @@
     <el-button @click="resetForm('ruleForm')">重置</el-button>
     </el-form-item>
 </el-form>
-  </div>
+</div>
+</div>
   </div>
 </template>
 
 <script>
+const axios = require('axios');
   export default {
     data() {
       var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
-          if (this.ruleForm.checkPass !== '') {
-            this.$refs.ruleForm.validateField('checkPass');
+          if (this.ruleForm.checkPassword !== '') {
+            this.$refs.ruleForm.validateField('checkPassword');
           }
           callback();
         }
@@ -91,7 +117,7 @@
       var validatePass2 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'));
-        } else if (value !== this.ruleForm.pass) {
+        } else if (value !== this.ruleForm.password) {
           callback(new Error('两次输入密码不一致!'));
         } else {
           callback();
@@ -99,34 +125,37 @@
       };
 
       return {
-        options: [{
-          value: '选项1',
+        option: [{
+          value: '2',
           label: '护士'
-        }, {
-          value: '选项2',
-          label: '医生',
-          disabled: true
         }],
+        imgUrl:'',
         ruleForm: {
           name: '',
-          id:'',
           type: '',
+          id:'',
           gender:'',
-          phone_no:'',
-          id_card:'',
-          date1: '',
-          date2: '',
+          phoneNo:'',
+          idCardNo:'',
+          registerDate: '',
+          birthday: '',
           areaId:'',
-          pass: '',
-          checkPass: '',
+          password: '',
+          checkPassword: '',
+          headImg:''
         },
+        uploadData: {
+            userId:'1234',
+        },
+        options:[],
+        param:"",
         rules: {
           name: [
             { required: true, message: '请输入姓名', trigger: 'blur' },
             { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
           ],
           id: [
-            { required: true, message: '请输入编号', trigger: 'blur' },
+            { message: '请输入编号', trigger: 'blur' },
             { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
           ],
           type: [
@@ -135,17 +164,11 @@
           gender: [
             { required: true, message: '请选择性别', trigger: 'change' }
           ],
-         phone_no: [
+         phoneNo: [
           {
-            type: 'number',required: true,message: '请输入手机号',trigger: 'blur'
-          },
-          {
-            pattern: /^1[3456789]\d{9}$/,
-            message: '手机号格式不对',
-            trigger: 'blur'
-          }
-         ],
-         id_card: [
+            message: '请输入手机号',trigger: 'blur'
+          }],
+         idCardNo: [
           { required: true, message: '请填写证件号码', trigger: 'blur' },
           {
             pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
@@ -153,39 +176,107 @@
             trigger: 'blur'
           }
         ],
-          date1: [
+          registerDate: [
             { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
           ],
-          date2: [
-            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+          birthday: [
+            { type: 'date', message: '请选择时间', trigger: 'change' }
           ],
-           areaId: [
-            { required: true, message: '请输入病区编号', trigger: 'blur' },
-            { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
-          ],
-          pass: [
+          password: [
             { validator: validatePass, trigger: 'blur' }
           ],
-          checkPass: [
+          checkPassword: [
             { validator: validatePass2, trigger: 'blur' }
           ]
         }
-      };
-    },
-    methods: {
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
       }
-  }
-}
+    },
+     created(){
+            this.getareaId()
+     
+        },
+      methods: {
+          //查询区域id
+        getareaId(){
+                let url = `http://47.107.189.55:8082/HomeCareCenter/area/search`
+                axios.get(url, {params: {areaId:this.ruleForm.areaId}}).then(res=>{
+                    this.options = res.data.data
+                })
+            },
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {//验证成功
+                        let url =`http://47.107.189.55:8082/HomeCareCenter/worker/add`
+                        axios.post(url,this.ruleForm).then(res=>{
+                            alert(res.data.code)
+                            if (res.data.code==0){
+                                this.$message({
+                                    message: '操作成功',
+                                    type: 'success'
+                                });
+                                alert('添加成功')
+                                console.log("success");  
+                            }
+                        }).catch(function(){
+                            console.log("服务器异常！");
+                            
+                         });
+                                
+
+                    }
+                })
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            },
+             handleAvatarSuccess(res,file) {
+              
+                this.imgUrl = URL.createObjectURL(file.raw);
+                this.ruleForm.headImg=this.imgUrl
+                 console.log(this.ruleForm.headImg)
+                },
+           
+            //上传成功前的回调函数
+            beforeAvatarUpload(file) {
+                this.image=file;
+               // console.log(this.image)
+                //console.log(file);
+                 //console.log(this.form)
+                //this.image=JSON.stringify(file);
+                const isJPG = file.type === 'image/jpeg'||'image/png';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG或者PNG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
+            }
+        }
+    }
 </script>
+
+<style scoped>
+.info1{
+    width: 30%;
+    margin: 2% 2% 2% 8%;
+    order: 1;
+}
+.info2{
+     width: 30%;
+     margin:2% 1% 2% 1%;
+     order: 2;
+}
+.picture{
+    width: 24%;
+    margin: 4% 4% 4% 1%;
+    display: flex;
+    flex-direction: column;
+    order: 3;
+}
+.block{
+    width: 100%;
+}
+</style>

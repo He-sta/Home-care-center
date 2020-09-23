@@ -3,14 +3,16 @@
     <div class="box">
       <el-container>
         <el-main v-bind:class="{ 'el-mainrr': true }">
-          <div>请选择病人</div>
+          
           <el-form
             :model="form"
             :rules="rules"
             ref="ruleForm"
             label-width="100px"
             class="demo-ruleForm"
+            style="display:flex;justify-content:center"
           >
+          <el-form-item label="请选择老人" style="width:30%">
             <el-select v-model="form.clientId" placeholder="请选择">
               <el-option
                 v-for="item in clientdata"
@@ -19,7 +21,10 @@
                 :value="item.id"
               ></el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item > 
             <el-button type="primary" @click.native="search">查找</el-button>
+            </el-form-item>
           </el-form>
           <div style="margin-top:3%;">
             <el-table :data="tableData" style="width: 100%">
@@ -121,7 +126,7 @@ export default {
   },
   methods: {
     search: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/dishSetCalendar/search`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/dishSetCalendar/search`;
       axios.get(url, { params: { clientId: this.form.clientId } }).then(res => {
         if (res.data.code == 0) {
           this.tableData = res.data.data;
@@ -131,7 +136,7 @@ export default {
       });
     },
     handleDelete: function(caseid) {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/dishSetCalendar/delete`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/dishSetCalendar/delete`;
       axios.get(url, { params: { id: caseid } }).then(res => {
         if (res.data.code == 0) {
           this.tableData = res.data.data;
@@ -148,7 +153,7 @@ export default {
     },
 
     ini: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/client/search`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/client/search`;
       axios.get(url).then(res => {
         if (res.data.code == 0) {
           this.clientdata = res.data.data;
@@ -168,7 +173,7 @@ export default {
   width: 20%;
 }
 .el-mainrr {
-  background-color: #bdbdbd;
+  background-color:white;
   color: #333;
   text-align: center;
   width: 80%;

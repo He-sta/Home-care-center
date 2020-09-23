@@ -3,11 +3,11 @@
     <div class="box">
         <div  class="search">
             <el-form :inline="true" :model="form" class="demo-form-inline">
-                <el-button type="primary" @click="add">入住登记</el-button>
-                    <el-form-item>
+             <!--   <el-button type="primary" @click="add">入住登记</el-button>-->
+                    <el-form-item style="margin-bottom:0">
                         <el-input v-model="form.name" placeholder="输入客户姓名"></el-input>
                     </el-form-item>
-                    <el-form-item>
+                    <el-form-item style="margin-bottom:0">
                         <el-button type="primary" @click="query">查询</el-button>
                     </el-form-item>
                 </el-form>
@@ -18,46 +18,55 @@
                     element-loading-text="拼命加载中"
                     :data="tableData"
                     border
+                    header-align='center'
                     style="width: 100%">
                 <el-table-column
                         type="index"
                         label="序号"
+                        align='center'
                         width="50">
                 </el-table-column>
                  <el-table-column
                         prop="name"
                         label="客户名称"
+                        align='center'
                         width="80">
                 </el-table-column>
                  <el-table-column
                         prop="id"
                         label="客户id"
-                        width="80">
+                        align='center'
+                        width="184">
                 </el-table-column>
                 <el-table-column
                         prop="gender"
                         label="性别"
+                        align='center'
                         width="80">
                 </el-table-column>
                 <el-table-column
                         prop="bedId"
                         label="床位号"
-                        width="80">
+                        align='center'
+                        width="180">
                 </el-table-column>
                 <el-table-column
                         prop="levelOfCare"
                         label="护理级别"
+                        align='center'
                         width="80">
                 </el-table-column>
                 <el-table-column
                         prop="inDate"
                         label="入住时间"
-                        width="120">
+                        align='center'
+                        width="170">
                 </el-table-column>
                 <el-table-column
                         prop="outDate"
                         label="到期时间"
-                        width="120">
+                        align='center'
+                        width="170">
                 </el-table-column>
               <!-- <el-table-column
                         prop="marriage"
@@ -70,14 +79,14 @@
                         width="150">  
                 </el-table-column> -->
                 <el-table-column
-                        label="操作" width="100">
+                        label="操作" align='center' width="120" > 
                     <template slot-scope="scope">
                          <el-tooltip class="item" effect="dark" content="更新信息" placement="bottom">
                         <el-button type="text" size="middle"  icon="el-icon-edit" @click="update(scope.row.id)"></el-button>
                     </el-tooltip>
-                        <el-tooltip class="item" effect="dark" content="护理记录" placement="bottom">
+                    <!--    <el-tooltip class="item" effect="dark" content="护理记录" placement="bottom">
                     <el-button type="text" size="middle" icon="el-icon-s-order" @click="record(scope.row.custId)"></el-button>>
-                    </el-tooltip>
+                    </el-tooltip>-->
                      <el-tooltip class="item" effect="dark" content="退住" placement="bottom">
                      <el-button type="text" size="middle" icon="el-icon-document-delete" @click="del(scope.row.id)"></el-button>
                     </el-tooltip>
@@ -119,7 +128,12 @@ export default {
                         //console.log(res.data.data[i].name)
                          var form = {};
                         form.name=res.data.data[i].name;
-                        form.gender=res.data.data[i].gender;
+                        if(res.data.data[i].gender==1){
+                             form.gender="男";
+                         }else{
+                              form.gender="女";
+                         }
+                        //form.gender=res.data.data[i].gender;
                         form.bedId=res.data.data[i].bedId;
                         form.name=res.data.data[i].name;
                         form.inDate=res.data.data[i].inDate;
@@ -183,8 +197,35 @@ export default {
             },
             //查询
             query(){
-                this.currPage = 1
-                this.getData()
+                var data=[];
+                let url = `${HOST}/client/search?name=${this.form.name}`
+                axios.get(url,{}).then(res=>{
+                    // console.log(res.data)
+                    //console.log(res.data.data[2].name)
+                    for (let i = 0; i < res.data.data.length; i++) {
+                        //console.log(res.data.data[i].name)
+                         var form = {};
+                        form.name=res.data.data[i].name;
+                         if(res.data.data[i].gender==1){
+                             form.gender="男";
+                         }else{
+                              form.gender="女";
+                         }
+                       // form.gender=res.data.data[i].gender;
+                        form.bedId=res.data.data[i].bedId;
+                        form.name=res.data.data[i].name;
+                        form.inDate=res.data.data[i].inDate;
+                        form.outDate=res.data.data[i].outDate;
+                        form.marriage=res.data.data[i].marriage;
+                        form.id=res.data.data[i].id;
+                        form.levelOfCare=res.data.data[i].levelOfCare;
+                        data[i] = form
+                        //this.form.name=res.data.date[i].name
+                    }
+                    console.log(data)
+                this.tableData=data;
+                console.log(this.tableData)
+                })
             },
             //跳转到膳食日历
             foodCalendar(id){
@@ -201,12 +242,15 @@ export default {
 .box{
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: 500px;
+    min-height: 500px;
 }
 .table{
     width: 96%;
     height: 90%;
+    margin-bottom: 2%;
+}
+.search{
+    margin: 1%;
 }
 </style>

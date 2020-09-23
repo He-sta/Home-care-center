@@ -6,8 +6,8 @@
             placement="right"
             width="400"
             trigger="click">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="客户" prop="clientId">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm ">
+                <el-form-item label="客户" prop="clientId" class="">
                     <el-select v-model="ruleForm.clientId" placeholder="请选择客户">
                         <el-option
                                 v-for="item in options"
@@ -37,10 +37,10 @@
                     <el-button @click="resetForm('ruleForm')">重置</el-button>
                 </el-form-item>
             </el-form>
-            <el-button slot="reference">click 激活</el-button>
+            <el-button slot="reference">添加护理记录</el-button>
             </el-popover>
-            <el-form :inline="true" :model="form" class="demo-form-inline">
-                <el-input v-model="form.name" placeholder="输入客户姓名"></el-input>
+            <el-form :inline="true" :model="form" class="demo-form-inline search_">
+                <el-input v-model="form.id" placeholder="输入客户id" style="margin-right:10px"></el-input>
                     <el-button type="primary" @click="query">查询</el-button>
             </el-form>
         </div>
@@ -57,9 +57,9 @@
                         width="50">
                 </el-table-column>
                 <el-table-column
-                        prop="clientId"
+                        prop="id"
                         label="客户id"
-                        width="80">
+                        width="180">
                 </el-table-column>
                 <el-table-column
                         prop="name"
@@ -69,19 +69,19 @@
                 <el-table-column
                         prop="content"
                         label="护理内容"
-                        width="80">
+                        width="280">
                 </el-table-column>
                 <el-table-column
                         prop="date"
                         label="护理日期"
-                        width="80">
+                        width="180">
                 </el-table-column>
                  <el-table-column
                         prop="remark"
                         label="remark"
-                        width="120">   
+                        >   
                 </el-table-column>
-                <el-table-column
+               <!-- <el-table-column
                         label="操作">
                     <template slot-scope="scope">
                          <el-popover
@@ -125,13 +125,31 @@
                         <el-button type="text" size="middle" icon="el-icon-s-order" @click="record(scope.row.custId)">护理记录</el-button>
                         <el-button type="text" size="middle" icon="el-icon-document-delete" @click="del(scope.row.custId)">退住</el-button>
                     </template>
-                </el-table-column>
+                </el-table-column>-->
             </el-table>
             </div>
     </div>
 </div>
 </template>
+<style scoped>
+.box{
+    flex-direction: column;
+    min-height: 500px;
+}
+.search{
+    display: flex;
+    justify-content: space-between;
+    margin: 1% 10%;
 
+}
+.search_{
+    display: flex;
+    margin-left: 10%;
+}
+.table{
+    margin: 0 2% 1%;
+}
+</style>
 <script>
 import axios from 'axios'
 import Qs from 'qs'
@@ -169,16 +187,17 @@ export default {
                     clientId: '',          //入住人ID
                     name: '',     //入住人
                     content: '',           //外出理由
-                   date: new Date(),        //外出时间
+                    date: new Date(),        //外出时间
                     remark: '',    //备注
                     nurseId:'',
                 },
                 form:{
-                    name:''
+                    id:''
                 },
                 tableData:[],
                 loading:false,
                 options:[],
+                nameArr:[],
                 rules:{
                      outTime: [
                         { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
@@ -193,6 +212,7 @@ export default {
         this.getClient();
         this.ruleForm.nurseId=sessionStorage.getItem("id")
         this.getData()
+        this.getClientName()
 
     },
     methods:{
@@ -210,6 +230,20 @@ export default {
                    console.log(this.ruleForm.clientId)
                 })
             },
+            getClientName(){
+               let url = `${HOST}/client/search`
+                var data=[];
+                axios.get(url, {}).then(res=>{
+                     for (let i = 0; i < res.data.data.length; i++) {
+                        var form = {};
+                        form.name=res.data.data[i].name;
+                        data[i] = form
+                     }
+                    // console.log(data)
+                     this.nameArr=data;
+                 //    console.log(this.tableData)
+                })
+            },
             getNurse(){
                 let id = sessionStorage.getItem("id");
                 this.nurseId=id
@@ -223,26 +257,47 @@ export default {
                 axios.get(url,{}).then(res=>{
                     console.log(res.data)
                     //console.log(res.data.data[2].name)
-                 /*   for (let i = 0; i < res.data.data.length; i++) {
+                    for (let i = 0; i < res.data.data.length; i++) {
                         //console.log(res.data.data[i].name)
                          var form = {};
-                        form.name=res.data.data[i].name;
-                        form.gender=res.data.data[i].gender;
-                        form.bedId=res.data.data[i].bedId;
-                        form.name=res.data.data[i].name;
-                        form.inDate=res.data.data[i].inDate;
-                        form.outDate=res.data.data[i].outDate;
-                        form.marriage=res.data.data[i].marriage;
+                        form.name=this.nameArr[i].name;
+                       // form.name=res.data.data[i].name;
                         form.id=res.data.data[i].id;
-                        form.levelOfCare=res.data.data[i].levelOfCare;
+                        form.content=res.data.data[i].content;
+                        form.remark=res.data.data[i].remark;
+                        form.date=res.data.data[i].date;
                         data[i] = form
                         //this.form.name=res.data.date[i].name
                     }
                     console.log(data)
                 this.tableData=data;
                // console.log(this.tableData)*/
-                this.ruleForm=res.data.data;
+                //this.ruleForm=res.data.data;
                 console.log(this.ruleForm)
+                })
+            },
+            query(){
+                var data=[];
+                let url = `${HOST}/nursingRecord/search?id=${this.form.id}`
+                axios.get(url,{}).then(res=>{
+                     console.log(res.data.data.id)
+                     //this.tableData=res.data.data
+                    //console.log(res.data.data[2].name)
+                    //for (let i = 0; i < res.data.data.length; i++) {
+                       // var i=0
+                         var form = {};
+                       // form.name=this.nameArr[i].name;
+                       form.name=res.data.data.name;
+                        form.id=res.data.data.id;
+                        form.content=res.data.data.content;
+                        form.remark=res.data.data.remark;
+                        form.date=res.data.data.date;
+                        data[0] = form
+                        //this.form.name=res.data.date[i].name
+                   // }
+                this.tableData=data;
+                console.log(this.tableData)
+
                 })
             },
          submitForm(ruleForm) {

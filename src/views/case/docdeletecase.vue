@@ -55,7 +55,7 @@ export default {
   width: 20%;
 }
 .el-mainrr {
-  background-color: #bdbdbd;
+  background-color: white;
   color: #333;
   text-align: center;
   width: 80%;

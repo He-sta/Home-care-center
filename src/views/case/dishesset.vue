@@ -2,13 +2,13 @@
   <div class="main">
     <div class="box">
       <el-container>
-        <el-main v-bind:class="{ 'el-mainrr': true }">
-          <el-form ref="form" :model="form" label-width="80px">
+        <el-main v-bind:class="{ 'el-mainrr': true }" style="display:flex;justify-content: center;">
+          <el-form ref="form" :model="form" label-width="70px"  style="width: 26%;">
             <el-form-item label="套餐名">
-              <el-input v-model="form.name" style="width: 30%;"></el-input>
+              <el-input v-model="form.name" ></el-input>
             </el-form-item>
             <el-form-item label="周一">
-              <el-select v-model="form.monId" multiple placeholder="请选择">
+              <el-select v-model="form.monId" multiple placeholder="请选择" >
                 <el-option
                   v-for="item in options"
                   :key="item.id"
@@ -107,8 +107,12 @@ export default {
   },
   methods: {
     onsubmit: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/dishSet/add`;
-      alert(this.form.monId+","+this.form.tueId+","+this.form.satId);
+      if(this.form.name==="")
+      {
+        alert("套餐名不能为空");
+      }
+      else{
+      let url = `http://47.107.189.55:8082/HomeCareCenter/dishSet/add`;
         axios.post(url,this.form).then(res => {
           if (res.data.code == 0) {
             this.$message({
@@ -121,9 +125,10 @@ export default {
             alert(res.data.code );
           }
         });
+      }
     },
     index: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/dish/search`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/dish/search`;
       axios.get(url).then(res => {
         if (res.data.code == 0) {
           this.options = res.data.data;
@@ -143,12 +148,15 @@ export default {
   width: 20%;
 }
 .el-mainrr {
-  background-color: #bdbdbd;
+  background-color:white;
   color: #333;
   text-align: center;
   width: 80%;
 }
 .el-container {
   height: 600px;
+}
+el-select{
+  width: 100% !important;
 }
 </style>

@@ -2,6 +2,7 @@
   <div class="main">
       <div class="box">
       <div class="picture">
+           <el-form ref="form" :model="form" label-width="80px">
        <div class="block"><el-avatar :size="120" :src="form.headImg"></el-avatar></div>
            <!-- -->
             <el-upload
@@ -13,13 +14,18 @@
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload">
-                <el-button>添加照片</el-button>
+                <el-button style="margin-top:10px">添加照片</el-button>
             <!--    <img v-if="imgUrl" :src="`${imgUrl}`" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
             </el-upload>
+            <div class="but">
+                <el-button type="primary" @click="onSubmit" style="margin:0px">立即创建</el-button>
+                <el-button>取消</el-button>
+            </div>
+           </el-form>
       </div>
       <div class="info1">
-          <el-form ref="form" :model="form" label-width="80px">
+          <el-form ref="form" :model="form" label-width="80px" :rules="rules">
             <el-form-item label="姓名">
                 <el-input v-model="form.name"></el-input>
             </el-form-item>
@@ -39,7 +45,7 @@
                 <el-input v-model="form.phoneNo"></el-input>
             </el-form-item>
              <el-form-item label="床位号" prop="bedId">
-                <el-select v-model="form.bedId" placeholder="请选择床位号">
+                <el-select v-model="form.bedId" placeholder="请选择床位号" style="width:100%">
                     <el-option
                             v-for="item in options"
                             :key="item.id"
@@ -48,9 +54,7 @@
                     </el-option>
                 </el-select>
                 </el-form-item>
-                <el-form-item label="护理级别">
-                <el-input v-model="form.levelOfCare"></el-input>
-            </el-form-item>
+                
             <el-form-item label="食物要求">
                 <el-input type="textarea" v-model="form.foodReq"></el-input>
             </el-form-item>
@@ -58,8 +62,11 @@
         </el-form>
       </div>
       <div class="info2">
-          <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="famaily">
+          <el-form ref="form" :model="form" label-width="80px" :rules="rules">
+              <el-form-item label="护理级别">
+                <el-input v-model="form.levelOfCare"></el-input>
+            </el-form-item>
+            <el-form-item label="家属">
                 <el-input v-model="form.relativeName"></el-input>
             </el-form-item>
             <el-form-item label="联系方式">
@@ -82,10 +89,7 @@
             <el-form-item label="备注">
                 <el-input type="textarea" v-model="form.remark"></el-input>
             </el-form-item>
-             <el-form-item class="but">
-                <el-button type="primary" @click="onSubmit" style="margin-right:40px">立即创建</el-button>
-                <el-button>取消</el-button>
-            </el-form-item>
+             
           </el-form>
       </div>
       </div>
@@ -125,13 +129,10 @@
             { required: true, message: '请输入活动名称', trigger: 'blur' },
             { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
           ],
-          region: [
+          marriage: [
             { required: true, message: '请选择活动区域', trigger: 'change' }
           ],
-          inDate: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          date2: [
+          bedId: [
             { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
           ],
           type: [
@@ -140,7 +141,7 @@
           gender: [
             { required: true, message: '请选择性别', trigger: 'change' }
           ],
-          desc: [
+          phoneNo: [
             { required: true, message: '请填写活动形式', trigger: 'blur' }
           ]
         }
@@ -154,7 +155,7 @@
     methods: {
         //查询所有空余的床位
             getBed(){
-                let url = `${HOST}/bed/searchEmpty`
+                let url = `${HOST}/bed/search`
                 axios.get(url, {params: {bedId:this.form.bedId}}).then(res=>{
                     this.options = res.data.data
                 })
@@ -164,20 +165,20 @@
                 this.$refs.form.validate((valid) => {
                     if (valid) {//验证成功
                         //提交数据到服务器
-                       
                         let url = `${HOST}/client/add`
                         //let dt = Qs.stringify(this.form);
                         axios.post(url,this.form).then(res=>{
                            // this.form = res ?res :{}
-                            alert(res.data.code)
+                            
                             if (res.data.code == 0){
                                 this.$message({
                                     message: '新增成功',
                                     type: 'success'
                                 });
-                                alert('添加成功')
+                               // alert('添加成功')
                                 console.log("success");  
                             }
+                            this.$router.push(`/register/client`)
                         }).catch(function(){
                             console.log("服务器异常！");
                             
@@ -187,13 +188,9 @@
     
       },
             handleAvatarSuccess(res,file) {
-              
                 this.imgUrl = URL.createObjectURL(file.raw);
                 this.form.headImg=this.imgUrl
                  console.log(this.form.headImg)
-                
-               
-
                 },
            
             //上传成功前的回调函数
@@ -219,16 +216,32 @@
 </script>
 <style scoped>
 .info1{
-    width: 34%;
-    margin: 2% 4%;
+    width: 30%;
+    margin: 2% 2% 2% 8%;
+    order: 1;
 }
 .info2{
-     width: 34%;
-     margin: 2% 4%;
+     width: 30%;
+     margin:2% 1% 2% 1%;
+     order: 2;
 }
 .picture{
-    width: 20%;
-    margin: 2% 2%;
+    width: 24%;
+    margin: 4% 4% 4% 1%;
+    display: flex;
+    flex-direction: column;
+    order: 3;
+}
+.block{
+    width: 100%;
+}
+.but{
+    width: 100%;
+    margin-top: 190px;
+    margin-left: 0 !important;
+}
+el-input{
+    width: 100px !important;
 }
 
 

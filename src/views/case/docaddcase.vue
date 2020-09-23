@@ -2,17 +2,18 @@
   <div class="main">
     <div class="box">
       <el-container>
-        <el-main v-bind:class="{ 'el-mainrr': true }">
+        <el-main v-bind:class="{ 'el-mainrr': true }" style="display:flex;justify-content:center">
           <el-form
             :model="form"
             :rules="rules"
             ref="ruleForm"
             label-width="100px"
             class="demo-ruleForm"
+            style="width: 42%;"
           >
-            <el-form-item>
-              <div>请选择病人</div>
-              <el-select v-model="form.clientId" placeholder="请选择">
+            <el-form-item label="请选择病人">
+              
+              <el-select v-model="form.clientId" placeholder="请选择"  style="width: 100%;"> 
                 <el-option
                   v-for="item in clientdata"
                   :key="item.id"
@@ -32,7 +33,7 @@
             </el-form-item>
             <el-form-item label="选择日期">
               <span class="demonstration"></span>
-              <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
+              <el-date-picker v-model="form.date" type="date" placeholder="选择日期" style="width: 100%;"></el-date-picker>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click.native="onsubmit">添加</el-button>
@@ -77,7 +78,7 @@ export default {
         clientId: "",
         disease: "",
         prescription: "",
-        doctorId: "1306054044329996288",
+        doctorId: "",
         remark: "",
         date: new Date()
       }
@@ -87,24 +88,35 @@ export default {
     this.ini();
   },
   methods: {
+     getCookie: function(name) {
+      var arr,
+        reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+      if ((arr = document.cookie.match(reg))) return arr[2];
+      else return null;
+    },
     onsubmit: function() {
+      var temp=this.getCookie("id");
+      this.form.doctorId=temp;
       var time1 = this.form.date.Format("yyyy-MM-dd");
-      alert(time1);
       this.form.date = time1;
-      let url = `http://47.107.189.55:8081/HomeCareCenter/medicalRecord/add`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/medicalRecord/add`;
       axios.post(url, this.form).then(res => {
         if (res.data.code == 0) {
-          this.$message({
-            message: "操作成功",
-            type: "success"
-          });
+          
+          if(res.data.msg===null)
+          {
+            alert("success");
+          }
+          else{
+            alert(res.data.msg);
+          }
         } else {
           alert(res.data.code);
         }
       });
     },
     ini: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/client/search`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/client/search`;
       axios.get(url).then(res => {
         if (res.data.code == 0) {
           this.clientdata = res.data.data;
@@ -124,10 +136,10 @@ export default {
   width: 20%;
 }
 .el-mainrr {
-  background-color: #bdbdbd;
+  background-color: white;
   color: #333;
   text-align: center;
-  width: 80%;
+  width: 40%;
 }
 .el-container {
   height: 600px;

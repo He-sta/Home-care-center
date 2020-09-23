@@ -2,13 +2,14 @@
   <div class="main">
     <div class="box">
       <el-container>
-        <el-main v-bind:class="{ 'el-mainrr': true }">
+        <el-main v-bind:class="{ 'el-mainrr': true }" style="display:flex;justify-content: center;">
           <el-form
             :model="form"
             :rules="rules"
             ref="ruleForm"
             label-width="100px"
             class="demo-ruleForm"
+            style="width: 42%;"
           >
             <div>请选择套餐</div>
             <el-select v-model="form.dishSetId" placeholder="请选择">
@@ -61,7 +62,7 @@ export default {
   },
   methods: {
     onsubmit: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/dishSetCalendar/update`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/dishSetCalendar/update`;
       axios.post(url, this.form).then(res => {
         if (res.data.code == 0) {
           this.$message({
@@ -74,7 +75,7 @@ export default {
       });
     },
     ini: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/client/search`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/client/search`;
       axios.get(url).then(res => {
         if (res.data.code == 0) {
           this.clientdata = res.data.data;
@@ -82,7 +83,7 @@ export default {
           alert(res.data.code);
         }
       });
-      url = `http://47.107.189.55:8081/HomeCareCenter/dishSet/search`;
+      url = `http://47.107.189.55:8082/HomeCareCenter/dishSet/search`;
       axios.get(url).then(res => {
         if (res.data.code == 0) {
           this.dishesdata = res.data.data;

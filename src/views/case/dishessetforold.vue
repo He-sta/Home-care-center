@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     onsubmit: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/dishSetCalendar/add`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/dishSetCalendar/add`;
       axios.post(url, this.form).then(res => {
         if (res.data.code == 0) {
           this.$message({
@@ -78,7 +78,7 @@ export default {
       });
     },
     ini: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/client/search`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/client/search`;
       axios.get(url).then(res => {
         if (res.data.code == 0) {
           this.clientdata = res.data.data;
@@ -86,7 +86,7 @@ export default {
           alert(res.data.code);
         }
       });
-      url = `http://47.107.189.55:8081/HomeCareCenter/dishSet/search`;
+      url = `http://47.107.189.55:8082/HomeCareCenter/dishSet/search`;
       axios.get(url).then(res => {
         if (res.data.code == 0) {
           this.dishesdata = res.data.data;
@@ -106,7 +106,7 @@ export default {
   width: 20%;
 }
 .el-mainrr {
-  background-color: #bdbdbd;
+  background-color: white;
   color: #333;
   text-align: center;
   width: 80%;

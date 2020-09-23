@@ -11,8 +11,8 @@
               ref="ruleForm"
               label-width="100px"
               class="demo-ruleForm"
-            >
-              <el-form-item>
+             style="display:flex">
+              <el-form-item >
                 <el-select v-model="form.clientId" placeholder="请选择病人">
                   <el-option
                     v-for="item in clientdata"
@@ -21,13 +21,15 @@
                     :value="item.id"
                   ></el-option>
                 </el-select>
-                <div>选择起始日期</div>
+                </el-form-item >
+                <el-form-item label="选择起始日期">
                 <span class="demonstration"></span>
                 <el-date-picker v-model="form.startDate" type="date" placeholder="选择起始日期"></el-date-picker>
-                <div>选择终止日期</div>
+                </el-form-item>
+                <el-form-item label="选择终止日期">
                 <span class="demonstration"></span>
                 <el-date-picker v-model="form.endDate" type="date" placeholder="选择截止日期"></el-date-picker>
-              </el-form-item>
+                </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click.native="search">查找</el-button>
               </el-form-item>
@@ -56,6 +58,7 @@
 </template>
 <script>
 import axios from "axios";
+import qs from "qs";
 Date.prototype.Format = function(fmt) {
   //author: meizz
   var o = {
@@ -105,10 +108,9 @@ export default {
       else return null;
     },
     search: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/medicalRecord/search`;
+      let url = `http://47.107.189.55:8082/HomeCareCenter/medicalRecord/search`;
       var time1 = this.form.startDate.Format("yyyy/MM/dd hh:mm:ss");
       var time2 = this.form.endDate.Format("yyyy/MM/dd") + " 23:59:59";
-      alert(time2);
       axios
         .get(url, {
           params: {
@@ -126,8 +128,7 @@ export default {
         });
     },
     handleDelete: function(caseid) {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/medicalRecord/delete`;
-      alert(caseid);
+      let url = `http://47.107.189.55:8082/HomeCareCenter/medicalRecord/delete`;
       axios.get(url, { params: { id: caseid } }).then(res => {
         if (res.data.code == 0) {
           this.tableData = res.data.data;
@@ -148,22 +149,23 @@ export default {
       });
     },
     ini: function() {
-      var temp = this.getCookie("jwt");
-      alert(temp);
-      let url = `http://47.107.189.55:8081/HomeCareCenter/client/search`;
-      axios({
-        method: "get",
-        url: `http://47.107.189.55:8081/HomeCareCenter/client/search`,
-        params:{},
-        headers: { Authorization: temp }
-      }).then(res => {
-        if (res.data.code == 0) {
-          alert("success");
-          this.clientdata = res.data.data;
-        } else {
-          alert(res.data.code);
-        }
-      });
+      let url = `http://47.107.189.55:8082/HomeCareCenter/client/search`;
+      axios
+        .get(url, {
+
+          params: {}
+        })
+        .then(res => {
+          if (res.data.code == 0) {
+        
+            this.clientdata = res.data.data;
+          } else {
+            alert(res.data.code);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
@@ -176,7 +178,7 @@ export default {
   width: 20%;
 }
 .el-mainrr {
-  background-color: #bdbdbd;
+  background-color: white;
   color: #333;
   text-align: center;
   width: 80%;

@@ -8,9 +8,9 @@
           <div style="font-size:30px">sign in</div>
           <div style="margin-top:5%">
             <el-form
-              :model="form"
+              :model="ruleForm"
               :rules="rules"
-              ref="form"
+              ref="ruleForm"
               label-width="100px"
               class="demo-ruleForm"
             >
@@ -18,7 +18,7 @@
                 <el-input v-model="form.idCardNo" placeholder="请输入用户名"></el-input>
               </el-form-item>
               <el-form-item label="密码">
-                <el-input v-model="form.password" placeholder="请输入密码"></el-input>
+                <el-input v-model="form.password" placeholder="请输入密码" show-password></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click.native="login">登录</el-button>
@@ -53,14 +53,16 @@ export default {
               message: "操作成功",
               type: "success"
             });
-            document.cookie="jwt="+res.data.data.jwt+";"+"id="+res.data.data.worker.id+";"+"expires="+res.data.data.ttl;
-            var x=document.cookie
-            alert(x);
-<<<<<<< HEAD
-            console.log(res.data.data.worker.id)
-            sessionStorage.setItem("id", res.data.data.worker.id);this.$router.push('/main')
-=======
->>>>>>> e9c3897163c75d09f2d542e751be695e87490bca
+            document.cookie = "id=" + res.data.data.worker.id + ";";
+            document.cookie = "jwt=" + res.data.data.jwt + ";";
+            document.cookie = "expires=" + res.data.data.ttl + ";";
+            var x = document.cookie;
+            console.log(res.data.data.worker.id);
+            sessionStorage.setItem("id", res.data.data.worker.id);
+            var id=sessionStorage.getItem("id")
+            console.log(id)
+            this.$router.push('/main')
+
           }
           else
           {
@@ -79,6 +81,8 @@ export default {
   color: #333;
   text-align: center;
   width: 60%;
+  background-image: url(sour.jpeg);
+  background-size: cover;
 }
 .el-lomainr {
   background-color: #ffffff;

@@ -41,7 +41,7 @@
                 <el-input v-model="form.phoneNo"></el-input>
             </el-form-item>
              <el-form-item label="床位号" prop="bedId">
-                <el-select v-model="form.bedId" placeholder="请选择床位号">
+                <el-select v-model="form.bedId" placeholder="请选择床位号" style="width:100%">
                     <el-option
                             v-for="item in options"
                             :key="item.id"
@@ -50,20 +50,22 @@
                     </el-option>
                 </el-select>
                 </el-form-item>
-                <el-form-item label="护理级别">
-                <el-input v-model="form.levelOfCare"></el-input>
-            </el-form-item>
-            <el-form-item label="食物要求">
+                <el-form-item label="食物要求">
                 <el-input type="textarea" v-model="form.foodReq"></el-input>
             </el-form-item>
-           
-        </el-form>
+                 </el-form>
       </div>
       <div class="info2">
           <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="famaily">
+            <el-form-item label="家人">
                 <el-input v-model="form.relativeName"></el-input>
             </el-form-item>
+             <el-form-item label="护理级别">
+                <el-input v-model="form.levelOfCare"></el-input>
+            </el-form-item>
+            
+           
+      
             <el-form-item label="联系方式">
                 <el-input v-model="form.relativePhone"></el-input>
             </el-form-item>
@@ -84,7 +86,7 @@
             <el-form-item label="备注">
                 <el-input type="textarea" v-model="form.remark"></el-input>
             </el-form-item>
-             <el-form-item class="but">
+             <el-form-item >
                 <el-button type="primary" @click="onSubmit" style="margin-right:40px">更新</el-button>
                 <el-button>取消</el-button>
             </el-form-item>
@@ -93,6 +95,36 @@
       </div>
   </div>
 </template>
+<style scoped>
+.info1{
+    width: 30%;
+    margin: 2% 2% 2% 8%;
+    order: 1;
+}
+.info2{
+     width: 30%;
+     margin:2% 1% 2% 1%;
+     order: 2;
+}
+.picture{
+    width: 24%;
+    margin: 4% 4% 4% 1%;
+    display: flex;
+    flex-direction: column;
+    order: 3;
+}
+.block{
+    width: 100%;
+}
+.but{
+    width: 100%;
+    margin-top: 190px;
+    margin-left: 0 !important;
+}
+el-input{
+    width: 100px !important;
+}
+</style>
 <script>
     import axios from 'axios'
     import Qs from 'qs'
@@ -182,14 +214,15 @@
                         //let dt = Qs.stringify(this.form);
                         axios.post(url,this.form).then(res=>{
                            // this.form = res ?res :{}
-                            alert(res.data.code)
+                           // alert(res.data.code)
                             if (res.data.code == 0){
                                 this.$message({
                                     message: '新增成功',
                                     type: 'success'
                                 });
-                                alert('添加成功')
+                               // alert('添加成功')
                                 console.log("success");  
+                                 this.$router.push(`/register/client`)
                             }
                         }).catch(function(){
                             console.log("服务器异常！");

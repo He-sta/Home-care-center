@@ -3,11 +3,13 @@ import VueRouter from "vue-router";
 import Main from "../views/Main/main.vue";
 import Login from "../views/login/login.vue";
 import Doctor from "../views/doctor/Doctor.vue";
+import DoctorAdd from "../views/doctor/DoctorAdd.vue";
+import DoctorUpdate from "../views/doctor/DoctorUpdate.vue";
 import Nurse from "../views/nurse/Nurse.vue";
 import NurseAdd from "../views/nurse/NurseAdd.vue";
+import NurseUpdate from "../views/nurse/NurseUpdate.vue";
 import NurseRecord from "../views/nurse/record.vue";
 import Init from "../views/manager/init.vue";
-import Exit from "../views/manager/exit.vue";
 import docaddcase from "../views/case/docaddcase.vue";
 import docmanagecase from "../views/case/docmanagecase.vue";
 import docsetcase from "../views/case/docsetcase.vue";
@@ -53,7 +55,14 @@ const routes =  [
           path: "/doctor/Doctor",
           component: Doctor
       },
-
+      {
+        path: "/doctor/DoctorAdd",
+        component: DoctorAdd
+      },
+      {
+        path: "/doctor/DoctorUpdate/:id",
+        component: DoctorUpdate
+      },
       {
           path: "/nurse/Nurse",
           component: Nurse
@@ -61,6 +70,10 @@ const routes =  [
       {
         path: "/nurse/NurseAdd",
         component: NurseAdd
+      },
+      {
+        path: "/nurse/NurseUpdate/:id",
+        component: NurseUpdate
       },
       {
         path: "/nurse/NurseRecord",
@@ -71,11 +84,6 @@ const routes =  [
           path: "/manager/init",
           component: Init
       },
-      {
-          path: "/manager/exit",
-          component: Exit
-      },
-    
       {
           path: '/calendar/calendar',
           component: Calendar

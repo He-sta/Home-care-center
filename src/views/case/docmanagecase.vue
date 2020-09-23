@@ -48,8 +48,7 @@ export default {
   },
   methods: {
     change: function() {
-      let url = `http://47.107.189.55:8081/HomeCareCenter/medicalRecord/update`;
-      alert(this.form.endDate);
+      let url = `http://47.107.189.55:8082/HomeCareCenter/medicalRecord/update`;
         axios.post(url,this.form).then(res => {
           if (res.data.code == 0) {
             alert("success");
@@ -71,7 +70,7 @@ export default {
   width: 20%;
 }
 .el-mainrr {
-  background-color: #bdbdbd;
+  background-color: white;
   color: #333;
   text-align: center;
   width: 80%;
